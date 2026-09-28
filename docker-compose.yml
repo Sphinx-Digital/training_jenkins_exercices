@@ -1,0 +1,39 @@
+# =====================================================================
+#  Jenkins for student lab
+#  Exposed on port 8000 so the proxy serves it over HTTPS at
+#  https://studentXX.training.sphinx-digital.com
+#
+#  Before starting, free port 8000:
+#    sudo systemctl stop webserver
+#    sudo systemctl disable webserver
+#
+#  Then:
+#    docker compose up -d
+#    docker compose exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+# =====================================================================
+services:
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    user: root
+    restart: unless-stopped
+    ports:
+      - "8000:8080"      # web UI, reachable through the HTTPS proxy
+      - "50000:50000"    # JNLP agent port
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      # Setup wizard stays enabled: students unlock Jenkins themselves
+      # with the initial admin password and pick their plugins.
+      JAVA_OPTS: "-Xmx1g -Djenkins.install.runSetupWizard=true"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/login || exit 1"]
+      start_period: 120s
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  jenkins_home:
