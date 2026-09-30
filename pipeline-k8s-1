@@ -17,9 +17,9 @@ spec:
     stages {
         stage('Package') {
             steps {
-                    sh "echo je suis un pod $hostname"
-                    sh "sleep 30"
-                    sh "j\\'ai fini"
+                    sh 'echo je suis un pod $HOSTNAME'
+                    sh 'sleep 3'
+                    sh "echo j\\'ai fini"
             }
         }
     }
