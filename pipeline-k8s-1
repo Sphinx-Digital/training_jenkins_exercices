@@ -1,0 +1,27 @@
+pipeline {
+    agent {
+        kubernetes {
+            yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+    - name: build
+      image: python:3.12-slim
+      command: ["sleep"]
+      args: ["infinity"]
+'''
+        }
+    }
+
+    stages {
+        stage('Package') {
+            steps {
+                    sh "echo je suis un pod $hostname"
+                    sh "sleep 30"
+                    sh "j'ai fini"
+            }
+        }
+    }
+
+}
