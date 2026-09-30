@@ -19,7 +19,7 @@ spec:
             steps {
                     sh "echo je suis un pod $hostname"
                     sh "sleep 30"
-                    sh "j'ai fini"
+                    sh "j\\'ai fini"
             }
         }
     }
